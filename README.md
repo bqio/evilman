@@ -1,4 +1,4 @@
-## PyGame Pet-Project
+## PyGame EvilMan Pet-Project
 
 ### Features
 
