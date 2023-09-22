@@ -4,9 +4,5 @@
 
 ### Features
 
-- State manager
+- Scenes
 - Main menu
-
-### TODO
-
-- Add music in menu
