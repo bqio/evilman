@@ -4,6 +4,7 @@ from common.constants import (
     DISPLAY_FPS
 )
 from scenes.main_menu import MainMenuScene
+from common.colors import BLACK_COLOR
 import pygame
 
 
@@ -18,7 +19,7 @@ def run() -> None:
     active_scene.awake()
 
     while active_scene != None:
-        screen.fill((0, 0, 0))
+        screen.fill(BLACK_COLOR)
 
         pressed_keys = pygame.key.get_pressed()
 
