@@ -3,10 +3,13 @@ from typing import TYPE_CHECKING, Callable, List
 
 if TYPE_CHECKING:
     from pygame.surface import Surface
+    from pygame.event import Event
 
 from pygame.math import Vector2
 from pygame.font import SysFont
+from pygame import K_UP, K_DOWN, KEYUP, K_RETURN
 from common.colors import WHITE_COLOR, RED_COLOR
+import pygame as pg
 
 
 class MenuItem:
@@ -38,11 +41,21 @@ class Menu:
 
     def select(self) -> None:
         self.items[self.current_index].action()
+        self.current_index = 0
 
-    def draw(self, surface: Surface) -> None:
+    def on_draw(self, surface: Surface) -> None:
         pos = Vector2(50, 65)
         for menu_index, menu_item in enumerate(self.items):
             color = RED_COLOR if menu_index == self.current_index else WHITE_COLOR
             surf = self.font.render(menu_item.title, True, color)
             surface.blit(surf, pos)
             pos.y += 50
+
+    def on_event(self, event: Event) -> None:
+        if event.type == KEYUP:
+            if event.key == K_UP:
+                self.up()
+            if event.key == K_DOWN:
+                self.down()
+            if event.key == K_RETURN:
+                self.select()

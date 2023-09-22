@@ -1,20 +1,45 @@
-from pygame import init, quit
-from core.display_manager import DisplayManager
-from core.event_manager import EventManager
-from core.state_manager import StateManager
-from states.main_menu import MainMenuState
-from states.settings_menu import SettigsMenuState
+from common.constants import (
+    DISPLAY_CAPTION,
+    DISPLAY_SIZE,
+    DISPLAY_FPS
+)
+from scenes.main_menu import MainMenuScene
+import pygame
 
 
-class Game:
-    def __init__(self) -> None:
-        init()
-        self.state_manager = StateManager(self)
-        self.display_manager = DisplayManager(self)
-        self.event_manager = EventManager(self)
+def run() -> None:
+    pygame.init()
+    pygame.display.set_caption(DISPLAY_CAPTION)
+    screen = pygame.display.set_mode(DISPLAY_SIZE)
+    clock = pygame.time.Clock()
 
-    def run(self) -> None:
-        self.state_manager.add_state(MainMenuState(self))
-        self.state_manager.add_state(SettigsMenuState(self))
-        self.event_manager.loop()
-        quit()
+    active_scene = MainMenuScene()
+
+    active_scene.awake()
+
+    while active_scene != None:
+        screen.fill((0, 0, 0))
+
+        pressed_keys = pygame.key.get_pressed()
+
+        filtered_events = []
+        for event in pygame.event.get():
+            quit_attempt = False
+            if event.type == pygame.QUIT:
+                quit_attempt = True
+            elif event.type == pygame.KEYDOWN:
+                alt_pressed = pressed_keys[pygame.K_LALT] or pressed_keys[pygame.K_RALT]
+                if event.key == pygame.K_F4 and alt_pressed:
+                    quit_attempt = True
+            if quit_attempt:
+                active_scene.kill()
+            else:
+                filtered_events.append(event)
+
+        active_scene.process(filtered_events, pressed_keys)
+        active_scene.update()
+        active_scene.render(screen)
+
+        active_scene = active_scene.next
+        pygame.display.flip()
+        clock.tick(DISPLAY_FPS)
