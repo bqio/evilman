@@ -4,5 +4,5 @@
 
 ### Features
 
-- Scenes
+- Scenes/SceneLoader
 - Main menu

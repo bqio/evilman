@@ -3,7 +3,7 @@ from common.constants import (
     DISPLAY_SIZE,
     DISPLAY_FPS
 )
-from scenes.main_menu import MainMenuScene
+from scenes import SceneLoader
 from common.colors import BLACK_COLOR
 import pygame
 
@@ -14,8 +14,9 @@ def run() -> None:
     screen = pygame.display.set_mode(DISPLAY_SIZE)
     clock = pygame.time.Clock()
 
-    active_scene = MainMenuScene()
+    SceneLoader.set("MainMenuScene")
 
+    active_scene = SceneLoader.get()
     active_scene.awake()
 
     while active_scene != None:
@@ -33,7 +34,7 @@ def run() -> None:
                 if event.key == pygame.K_F4 and alt_pressed:
                     quit_attempt = True
             if quit_attempt:
-                active_scene.kill()
+                SceneLoader.switch_to(None)
             else:
                 filtered_events.append(event)
 
@@ -41,6 +42,9 @@ def run() -> None:
         active_scene.update()
         active_scene.render(screen)
 
-        active_scene = active_scene.next
         pygame.display.flip()
         clock.tick(DISPLAY_FPS)
+
+        active_scene = SceneLoader.get()
+
+    pygame.quit()

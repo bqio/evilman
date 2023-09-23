@@ -6,22 +6,21 @@ if TYPE_CHECKING:
     from pygame.surface import Surface
     from pygame.key import ScancodeWrapper
 
-from common.base.scene import BaseScene
-from scenes.settings_menu import SettingsMenuScene
+from scenes import BaseScene, SceneLoader
 from core.menu import Menu, MenuItem
 
 
-class MainMenuScene(BaseScene):
+class MainMenuScene(BaseScene, SceneLoader):
     def __init__(self) -> None:
         BaseScene.__init__(self)
 
     def awake(self) -> None:
         print("[Awake]:", "MainMenu")
         self.menu = Menu()
-        self.menu.add_item(MenuItem("New Game", None))
-        self.menu.add_item(MenuItem("Load Game", None))
+        self.menu.add_item(MenuItem("New Game", self.on_new_game_selected))
+        self.menu.add_item(MenuItem("Load Game", self.on_load_game_selected))
         self.menu.add_item(MenuItem("Settings", self.on_settings_selected))
-        self.menu.add_item(MenuItem("Exit", None))
+        self.menu.add_item(MenuItem("Exit", self.on_exit_selected))
 
     def update(self) -> None:
         return super().update()
@@ -36,5 +35,14 @@ class MainMenuScene(BaseScene):
     def destroy(self) -> None:
         print("[Destroy]:", "MainMenu")
 
+    def on_new_game_selected(self) -> None:
+        pass
+
+    def on_load_game_selected(self) -> None:
+        pass
+
     def on_settings_selected(self) -> None:
-        self.switch_to(SettingsMenuScene())
+        SceneLoader.switch_to("SettingsMenuScene")
+
+    def on_exit_selected(self) -> None:
+        SceneLoader.switch_to(None)
